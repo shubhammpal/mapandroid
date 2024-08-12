@@ -1,0 +1,76 @@
+# Resolve react_native_pods.rb with node to allow for hoisting
+# require Pod::Executable.execute_command('node', ['-p',
+#   'require.resolve(
+#     "react-native/scripts/react_native_pods.rb",
+#     {paths: [process.argv[1]]},
+#   )', __dir__]).strip
+ def node_require(script)
+   # Resolve script with node to allow for hoisting
+   require Pod::Executable.execute_command('node', ['-p',
+     "require.resolve(
+       '#{script}',
+       {paths: [process.argv[1]]},
+     )", __dir__]).strip
+ end
+
+ node_require('react-native/scripts/react_native_pods.rb')
+ node_require('react-native-permissions/scripts/setup.rb')
+#  use_modular_headers!
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+ install! 'cocoapods', :disable_input_output_paths => true
+
+setup_permissions([
+  'LocationAccuracy',
+  'LocationAlways',
+  'LocationWhenInUse',
+])
+use_frameworks! :linkage => :static
+#use_frameworks! :linkage => :static
+$RNFirebaseAsStaticFramework = true
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+target 'TheBikersCompany' do
+  config = use_native_modules!
+  pod 'react-native-video', :path => '../node_modules/react-native-video', :modular_headers => true
+  pod 'SPTPersistentCache', :modular_headers => true
+  pod 'DVAssetLoaderDelegate', :modular_headers => true
+  # Mapbox-iOS-SDK
+  $ReactNativeMapboxGLIOSVersion = '~> 6.4.1'
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+  $RNVideoUseVideoCaching=true
+  $RNVideoUseGoogleIMA=true
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  # pod 'RNSensors', :path => '../node_modules/react-native-sensors'
+  target 'TheBikersCompanyTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+  pre_install do |installer|
+    $RNMBNAV.pre_install(installer)
+    # $RNMapboxMaps.pre_install(installer)
+    # any other pre install hooks here
+  end
+  post_install do |installer|
+    $RNMBNAV.post_install(installer)
+    # $RNMapboxMaps.post_install(installer)
+    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
+    #  $RNMapboxMaps.post_install(installer)
+    # $RNMBNAV.pre_install(installer)
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+      # :ccache_enabled => true
+    )
+  end
+end

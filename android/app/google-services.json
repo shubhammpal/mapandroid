@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "783249972936",
+    "project_id": "mytra-55cf1",
+    "storage_bucket": "mytra-55cf1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783249972936:android:0b6b740b78688e55ad0ffd",
+        "android_client_info": {
+          "package_name": "com.thebikerscompany"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783249972936-tksub9upmr3itu0husbnkp0liqo3rlkq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thebikerscompany",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "783249972936-e3jmtlt9d3j93hmvcg5jh38sm88evso2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCJZnWG07NHaw3nwqc0w1dHaNRi_KrlXY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "783249972936-e3jmtlt9d3j93hmvcg5jh38sm88evso2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
